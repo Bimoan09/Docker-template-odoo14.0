@@ -16,19 +16,35 @@ services:
       - ./custom_addons:/mnt/extra-addons
 
   db:
-      image: postgres:10
-      container_name: db
-      restart: unless-stopped
-      environment:
-        - POSTGRES_PASSWORD=odoo
-        - POSTGRES_USER=odoo
-        - POSTGRES_DB=postgres 
-      volumes:
-      - odoo-db-data:/var/lib/postgresql/data/pgdata
+    image: postgres:10
+    container_name: db
+    restart: unless-stopped
+    ports: 
+      - 8080:5432
+    environment:
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - POSTGRES_DB=postgres 
+    volumes:
+    - odoo-db-data:/var/lib/postgresql/data/pgdata
+
+  pgadmin4-demo:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: gmail@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: unbreakable_gmail_password
+    ports:
+      - 7777:80
+    depends_on:
+      - db
+
       
 volumes:
   odoo-web-data:
   odoo-db-data:
+  pgadmin-data:
 
 
 
